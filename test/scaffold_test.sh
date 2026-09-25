@@ -11,4 +11,15 @@ grep -q 'AGENTS.md' "$tmp/.github/copilot-instructions.md" || { echo "FAIL: copi
 printf 'custom repo rules\n' > "$tmp/AGENTS.md"
 "$here/scaffold-repo.sh" "$tmp" >/dev/null
 grep -q 'custom repo rules' "$tmp/AGENTS.md" || { echo "FAIL: clobbered existing AGENTS.md"; exit 1; }
+
+# does not clobber an existing copilot shim
+printf 'custom shim\n' > "$tmp/.github/copilot-instructions.md"
+"$here/scaffold-repo.sh" "$tmp" >/dev/null
+grep -q 'custom shim' "$tmp/.github/copilot-instructions.md" || { echo "FAIL: clobbered existing copilot shim"; exit 1; }
+
+# usage guard: missing arg exits non-zero
+if "$here/scaffold-repo.sh" >/dev/null 2>&1; then echo "FAIL: missing arg accepted"; exit 1; fi
+# usage guard: non-directory arg exits non-zero
+if "$here/scaffold-repo.sh" "$tmp/does-not-exist" >/dev/null 2>&1; then echo "FAIL: non-directory arg accepted"; exit 1; fi
+
 echo PASS

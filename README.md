@@ -13,6 +13,8 @@ This links `persona/` into `~/.claude/CLAUDE.md` and symlinks the
 effect immediately. For Cursor and Windsurf, add `persona/beliefs.md` and
 `persona/voice.md` as user rules (manual, one time).
 
+If you move or re-clone the repo, re-run `./install.sh` to refresh the links.
+
 ## Layers
 
 - `persona/` personal, global. `beliefs.md` and `voice.md`.

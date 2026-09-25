@@ -15,4 +15,7 @@ grep -q "@$here/persona/voice.md" "$CLAUDE_HOME/CLAUDE.md" || { echo "FAIL: voic
 # idempotent: second run keeps exactly one managed block
 "$here/install.sh" >/dev/null
 [ "$(grep -c 'engineering-persona:begin' "$CLAUDE_HOME/CLAUDE.md")" -eq 1 ] || { echo "FAIL: duplicate managed block"; exit 1; }
+
+grep -q 'keep me' "$CLAUDE_HOME/CLAUDE.md" || { echo "FAIL: user content lost on second run"; exit 1; }
+
 echo PASS
