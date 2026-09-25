@@ -26,6 +26,7 @@ cat > "$PLIST" <<PL
   <array>
     <string>$REPO_DIR/run-sweep.sh</string>
   </array>
+  <key>WorkingDirectory</key><string>$REPO_DIR</string>
   <key>StartCalendarInterval</key>
   <dict><key>Hour</key><integer>$HOUR</integer><key>Minute</key><integer>0</integer></dict>
   <key>StandardOutPath</key><string>$HOME/.claude/engineering-persona/sweep.log</string>

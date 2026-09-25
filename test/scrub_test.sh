@@ -23,6 +23,7 @@ The bug was in `OrderService.place()`
 As called out in PROJ-1234
 The regression is in OrderService.java
 Follow the eg-internal reporting pattern
+The values live in service.properties
 BAD
 
 echo PASS

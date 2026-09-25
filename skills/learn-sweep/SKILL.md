@@ -28,17 +28,19 @@ Never cross them: internal reads use work; the personal repo uses Ashaba.
 
 ## Steps
 
+Run from the repo root (run-sweep.sh ensures this).
+
 1. Check gh auth and network. If either is missing, log and exit without changing
    the watermark.
 2. List PRs from the source (authored) with review activity since the watermark;
    collect review comment bodies.
 3. For each actionable comment, write the missed pattern as one generalized
    sentence: no code, URLs, repo or service names, ticket IDs, or paths.
-4. Run each proposed rule through `../../scrub-check.sh "<rule>"`. If it exits
+4. Run each proposed rule through `./scrub-check.sh "<rule>"`. If it exits
    non-zero, drop the rule and log that one was dropped (never write it).
-5. Classify each surviving rule into `../../persona/beliefs.md`,
-   `../../persona/voice.md`, `../../standards/engineering.md`,
-   `../../standards/review-checklist.md`, or `../../domains/<domain>.md`. Dedup
+5. Classify each surviving rule into `persona/beliefs.md`,
+   `persona/voice.md`, `standards/engineering.md`,
+   `standards/review-checklist.md`, or `domains/<domain>.md`. Dedup
    against the current file contents.
 6. If any rules survive: create branch `NO_JIRA_learned-<YYYY-MM-DD>`, append each
    rule to its target section, commit, push (ash key), and open a PR with the
