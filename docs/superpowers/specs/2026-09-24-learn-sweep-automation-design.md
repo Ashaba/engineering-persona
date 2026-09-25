@@ -38,6 +38,9 @@ rule in the personal repo, behind an approval gate.
 - No auto-merge of the gate PR; the engineer reviews and merges.
 - No dashboards or metrics.
 - Personal-repo review learning is out of v1 scope; the sweep targets `eg-internal`.
+- No user-configurable source in v1. The source is fixed to `eg-internal`, but held
+  as a single default value so making it configurable later is additive (see
+  Future).
 
 ## Prerequisites
 
@@ -75,8 +78,11 @@ whole flow and opens a gated PR.
 ### Flow
 
 1. Read the watermark (default: 7 days ago if absent).
-2. `gh` (work account) lists the engineer's authored `eg-internal` PRs with review
-   activity since the watermark; collect review comment bodies.
+2. Resolve the source from a single default value (v1: host `github.com`, org
+   `eg-internal`, query = PRs the engineer authored). `gh` (work account) lists
+   those PRs with review activity since the watermark; collect review comment
+   bodies. Keeping the source in one place is what lets a future config override it
+   without touching the rest of the flow.
 3. For each actionable comment, state the missed pattern in one generalized
    sentence. Run it through the scrub; drop and log anything that fails.
 4. Classify into `beliefs.md`, `voice.md`, `standards/engineering.md`,
@@ -125,7 +131,15 @@ personal repo and never sends them off the machine.
 - launchd running unattended. Mitigation: it only ever opens a PR (never merges,
   never touches `main`), so the worst case is an unwanted PR the engineer closes.
 
+## Future
+
+- Make the review source user-configurable: host, org, and the PR query, so the
+  sweep can target any repo set the engineer configures (personal repos, other
+  orgs, PRs reviewed rather than authored), with `eg-internal` as the default. v1
+  holds the source as a single default value specifically so this is an additive
+  config, not a rewrite.
+
 ## Out of scope
 
-Cloud scheduling, event-driven triggers, auto-merge, personal-repo review learning,
+Cloud scheduling, event-driven triggers, auto-merge, a full configuration system,
 and non-macOS schedulers (cron/systemd) beyond a documented note.
