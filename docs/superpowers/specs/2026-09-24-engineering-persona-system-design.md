@@ -1,4 +1,4 @@
-# Engineering Persona System — Design
+# Engineering Persona System: Design
 
 Date: 2026-09-24
 Status: Approved (design), pending implementation plan
@@ -14,25 +14,27 @@ rounds restating the same objections. We want a portable, version-controlled
 standard without re-explanation, and an active check that catches drift before a
 PR reaches a human reviewer.
 
-Evidence of the drift (three real PRs analysed):
-`webhooks-platform-auxiliary-service#41`, `supply-api-lodging-promotions-graphql#421`,
-`ls-notification-service#481`. The same six anti-patterns recur; the engineer's
-`copilot-instructions.md` already forbids most of them, which shows passive
-instructions alone are not enough — enforcement is missing.
+The drift is not random. Across AI-authored work the same anti-patterns recur, and
+in many cases the engineer's own tool instructions already forbid them. That shows
+passive instructions alone are not enough; the missing piece is enforcement at
+review time.
 
-### The six recurring anti-patterns (drift signature)
+### Recurring anti-patterns (the drift signature)
 
-1. Over-engineering / needless abstraction with no second consumer.
-2. Reinventing platform/framework features instead of reusing them.
-3. Unnecessary nullability and defensive re-validation away from the boundary.
-4. Scope creep — unrelated config/doc/file changes.
-5. Swallowing errors / leaking internal names / dropping upstream status codes.
-6. Breaking shared code paths and contract/generated-artifact drift; diverging
-   from the established sibling implementation.
+1. Over-engineering or needless abstraction with no second consumer.
+2. Reinventing platform, framework, or language features instead of reusing them.
+3. Duplicating code or types instead of reusing what already exists (DRY).
+4. Unnecessary nullability or optionality, and defensive re-validation away from
+   the boundary.
+5. Scope creep: changes unrelated to the task at hand.
+6. Swallowing errors, leaking internal details, or dropping upstream status and
+   context.
+7. Breaking shared or consumer-facing behavior, and letting contracts or generated
+   artifacts drift from their source.
 
-Non-drift note: branch/commit/Jira hygiene was already followed in all three PRs,
-so it is documented but not a focus. The only format weak spot is emojis in PR
-bodies and verbose, em-dash-heavy prose.
+Format weak spots that also recur: emojis in PR titles or descriptions, and
+verbose, em-dash-heavy prose. Branch, commit, and ticket hygiene are typically
+fine and are documented but not a focus.
 
 ## Goals (v1)
 
@@ -42,8 +44,8 @@ bodies and verbose, em-dash-heavy prose.
 - Deliver the persona to Claude Code, GitHub Copilot, Cursor/Windsurf, and Devin
   in each tool's native format from a single canonical source, with minimal
   duplication ("generic").
-- Provide an active **pre-flight review** that runs before push and flags the six
-  anti-patterns with `file:line`.
+- Provide an active **pre-flight review** that runs before push and flags the
+  recurring anti-patterns with `file:line`.
 - Be portable: clone the source repo on any machine (work or personal) and wire it
   in with one command.
 - Scope v1 to **code + PR review**. Docs, message replies, and support answers are
@@ -69,7 +71,7 @@ ai-skills-and-agent/                 # canonical source -> personal GitHub
     voice.md                         #   writing/review style
   standards/                         # LAYER 2 - team/industry, per-repo
     engineering.md                   #   curated standards
-    review-checklist.md              #   the six anti-patterns as gates
+    review-checklist.md              #   the recurring anti-patterns as gates
     AGENTS.template.md               #   per-repo spine to scaffold into work repos
   skills/
     pre-flight-review/SKILL.md       #   active enforcement component
@@ -79,19 +81,18 @@ ai-skills-and-agent/                 # canonical source -> personal GitHub
   README.md
 ```
 
-### Layer 1 — personal, global
+### Layer 1: personal, global
 
 Installed to `~/.claude/CLAUDE.md` and `~/.claude/skills/`, plus best-effort
 Cursor/Windsurf user-level rules. Applies to every repo the person touches, work
 or personal. Contents: `beliefs.md` + `voice.md`.
 
-### Layer 2 — team/industry, per repo
+### Layer 2: team/industry, per repo
 
 A single `AGENTS.md` (the generic spine that Cursor, Windsurf, Devin, and Copilot
 read or are adopting) plus a one-line `.github/copilot-instructions.md` shim that
 points at it. Committed into each work repo so teammates and repo-aware tools also
-benefit. Derived from `standards/engineering.md` + `standards/review-checklist.md`,
-tailored per repo.
+benefit. `scaffold-repo.sh` seeds it from `AGENTS.template.md`.
 
 ### Per-tool delivery map
 
@@ -108,6 +109,12 @@ tailored per repo.
 ### persona/beliefs.md (personal)
 
 - Self-documenting code; comment only non-obvious intent, never restate code.
+- Simplicity and readability first (a Zen-of-Python sensibility): simple over
+  complex, readable over clever, explicit over implicit, flat over nested, prefer
+  the one obvious way, and never let errors pass silently.
+- Use the current recommended practices and idioms of whatever language or
+  technology is in play (for example Java records instead of hand-written POJOs,
+  modern stdlib, pattern matching); keep code contemporary rather than dated.
 - Challenge the ticket; think big-picture about codebase impact before executing.
 - Minor improvements only when related to the current task; refactoring expands
   scope and is avoided unless asked.
@@ -115,20 +122,30 @@ tailored per repo.
 - Customer-first: no breaking changes; design for extensibility and forward
   compatibility since the software is consumed by other products.
 - Prefer standard patterns; keep code clean.
+- Code is the source of truth. Verify claims from Confluence, READMEs, Jira
+  tickets, or another service's docs against the actual code or schema before
+  acting; confirm a contract before integrating rather than assuming.
+- Verify before asserting. Do not push changes or call work done until all checks
+  pass (build, tests, lint, CI); rely on real output, not assumptions.
 
 ### persona/voice.md (personal)
 
 - Concise, human, straightforward prose.
 - No em-dashes.
 - No emojis in PR titles or descriptions.
-- One sentence per review comment; comment only at >80% confidence; actionable,
-  not observational.
+- Review feedback is kind and Socratic: nudge the author toward the concern and
+  let them decide ("what do you think about...?", "would it be simpler to...?")
+  rather than issuing directives.
+- Vary phrasing and keep it natural; avoid a formulaic template so feedback reads
+  as a thoughtful human, not a predictable bot.
+- Comment only at high confidence; keep each comment specific and actionable, not
+  observational.
 
 ### standards/engineering.md (team, curated)
 
-- Reuse platform/framework features before building new (APM over custom metrics;
-  `ResponseEntityExceptionHandler`; `Page`; existing `grpcErrorMapper`; existing
-  enums).
+- Reuse platform/framework features before building new (platform APM over custom
+  metrics; framework exception handling; standard pagination types; existing error
+  mappers and enums).
 - DTOs required-by-default; validate at the controller/bean-validation boundary,
   not defensively in services.
 - Domain/application error codes over raw HTTP; never leak internal/downstream
@@ -140,27 +157,33 @@ tailored per repo.
 - Coverage must not regress.
 - Follow the repo PR template and Jira branch/commit conventions.
 
-### standards/review-checklist.md (the six gates)
+### standards/review-checklist.md (the review gates)
 
 Each gate is phrased as the reviewer's challenge:
 
-1. What is the second consumer of this abstraction? If none, inline it.
-2. Does the framework/platform already do this? If yes, use it.
-3. Can this field ever actually be null? If not, make it required.
-4. Is any of this unrelated to the ticket? If yes, remove or defer it.
-5. Does this swallow an error or leak an internal name / drop a status code?
-6. Does this change behavior for other callers, drift from the sibling path, or
-   leave generated artifacts stale?
+- What is the second consumer of this abstraction? If none, inline it.
+- Does the framework, platform, or language already do this? If yes, use it.
+- Does this duplicate existing code or a type? If yes, reuse the original.
+- Can this field ever actually be null? If not, make it required, and validate at
+  the boundary rather than defensively downstream.
+- Is any of this unrelated to the task? If yes, remove or defer it.
+- Does this swallow an error, leak an internal detail, or drop an upstream status?
+- Does this change behavior for other callers, or let a contract or generated
+  artifact drift from its source?
+- Is this the current idiom for the language and tech, or a dated pattern?
+- Was any assumption taken from a doc, README, or ticket without confirming it
+  against the code or schema?
 
 ## Pre-flight review skill
 
 A Claude Code skill (`skills/pre-flight-review/SKILL.md`) run before pushing
-(`/pre-flight-review` or before PR creation). It reads the branch diff, applies
-the six gates plus beliefs/standards, and reports drift with `file:line` so the AI
-fixes its own work before a human reviewer sees it. It **reuses the built-in
-`/code-review` skill** and layers the persona-specific checklist on top, rather
-than reimplementing review logic (itself one of the standards). This is the
-component that would have caught all three reference PRs.
+(`/pre-flight-review` or before PR creation). It reads the branch diff, applies the
+review gates plus beliefs and standards, confirms all checks pass, and reports
+drift with `file:line` so the AI fixes its own work before a human reviewer sees
+it. It **reuses the built-in `/code-review` skill** and layers the persona-specific
+gates on top, rather than reimplementing review logic (itself one of the
+standards). This is the component that catches the recurring anti-patterns before
+they reach review.
 
 ## Portability
 
@@ -197,11 +220,13 @@ properties keep editing frictionless:
 
 ## Validation
 
-The three reference PRs are kept as regression fixtures under `evals/`. Acceptance
-for v1: re-running the PR #41 / #421 tasks with the persona active no longer
-produces nullable-required fields, single-use abstractions, or scope creep. No
-test framework; a short note per fixture describing the task and the expected
-absence of each anti-pattern is sufficient.
+Acceptance for v1: given tasks that previously triggered the drift signature, the
+persona active produces work free of those anti-patterns (no nullable-required
+fields, no single-use abstractions, no scope creep, and so on). A small set of
+generic task scenarios is kept under `evals/`, each a short description of the task
+and the anti-patterns it should no longer produce. No test framework; a written
+scenario and a manual check is sufficient for v1. Scenarios are seeded from real
+drift but written generically so they stay meaningful over time.
 
 ## Risks and mitigations
 
@@ -210,7 +235,7 @@ absence of each anti-pattern is sufficient.
 - **Symlinks on a fresh machine may need the repo present before tools start.**
   Mitigation: `install.sh` is idempotent and documents the clone-first order.
 - **Persona could grow verbose and lose signal.** Mitigation: v1 stays scoped to
-  code + PR review; each rule earns its place from an observed PR drift.
+  code + PR review; each rule earns its place from observed drift.
 - **Global personal layer could leak personal prefs into shared repos.** Mitigation:
   personal layer stays on the machine; only the curated team layer is committed to
   work repos.
