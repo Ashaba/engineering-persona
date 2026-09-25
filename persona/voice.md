@@ -6,6 +6,8 @@ review feedback.
 - Concise, human, straightforward prose.
 - No em-dashes.
 - No emojis in PR titles or descriptions.
+- Never post, submit, or publish reviews or comments on my behalf. This is a hard
+  rule. Produce them as pending or draft only; I review and post them myself.
 - Review feedback is kind and Socratic. Nudge the author toward the concern and
   let them decide ("what do you think about...?", "would it be simpler to...?")
   rather than issuing directives.

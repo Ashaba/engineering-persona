@@ -28,5 +28,9 @@ Read those three files first. They are the source of truth and change over time.
 
 ## Writing any comments
 
+Never post, submit, or publish comments or reviews on the user's behalf. Do not run
+`/code-review --comment`, do not submit a GitHub review, do not post to a PR. Produce
+findings as a local report or pending/draft comments only; the user posts them.
+
 Follow `voice.md`: kind and Socratic, invite the author to decide, vary phrasing,
 no em-dashes, no emojis, concise and specific.
