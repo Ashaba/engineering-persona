@@ -35,6 +35,7 @@ A repo declares its industry in its `AGENTS.md` `## Domain` section
 (`Domain: finance-trading`). When set, the persona judges matching concerns more
 critically and applies domain rules. If unset, it infers the domain and confirms
 before applying. Seeded domains live in `domains/`; add one by adding a file.
+Updating a repo's inlined lens after the library changes is a manual edit; re-running `scaffold-repo.sh` skips an existing `AGENTS.md`.
 
 ## Living documents
 

@@ -155,8 +155,9 @@ domain is one new file plus, optionally, scaffolding a repo with it.
   lenses stay short and honest; growth happens through the Inbox as real needs
   appear.
 - Inlined lens in a work repo goes stale versus the persona library. Mitigation:
-  re-running `scaffold-repo.sh` refreshes it; the declared `Domain:` line records
-  which lens was applied.
+  the declared `Domain:` line records which lens was applied; refreshing an inlined
+  lens is a manual edit, since re-running `scaffold-repo.sh` preserves an existing
+  `AGENTS.md`.
 - Non-interactive tools cannot confirm an inference. Mitigation: they use the
   declared domain or the default; confirmation is only a convenience in
   interactive contexts.

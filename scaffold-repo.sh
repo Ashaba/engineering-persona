@@ -6,9 +6,14 @@ target="${1:-}"
 domain="${2:-}"
 { [ -n "$target" ] && [ -d "$target" ]; } || { echo "usage: scaffold-repo.sh <path-to-repo> [domain]" >&2; exit 2; }
 
-if [ -n "$domain" ] && [ ! -f "$REPO_DIR/domains/$domain.md" ]; then
-  echo "unknown domain: $domain (see $REPO_DIR/domains/)" >&2
-  exit 3
+if [ -n "$domain" ]; then
+  case "$domain" in
+    *[!a-z0-9_-]*) echo "invalid domain name: $domain" >&2; exit 3 ;;
+  esac
+  if [ ! -f "$REPO_DIR/domains/$domain.md" ]; then
+    echo "unknown domain: $domain (see $REPO_DIR/domains/)" >&2
+    exit 3
+  fi
 fi
 
 agents="$target/AGENTS.md"
@@ -20,7 +25,7 @@ if [ -e "$agents" ]; then
 else
   cp "$REPO_DIR/standards/AGENTS.template.md" "$agents"
   if [ -n "$domain" ]; then
-    lens="$(awk 'NR==1 && /^# /{next} /^## Inbox/{exit} {print}' "$REPO_DIR/domains/$domain.md")"
+    lens="$(awk '/^## Criticality ordering/{p=1} /^## Inbox/{p=0} p' "$REPO_DIR/domains/$domain.md")"
     awk '/^## Domain/{exit} {print}' "$agents" > "$agents.tmp"
     {
       printf '## Domain\n\n'

@@ -49,4 +49,9 @@ printf 'custom repo rules\n' > "$d4/AGENTS.md"
 grep -q 'custom repo rules' "$d4/AGENTS.md" || { echo "FAIL: clobbered existing AGENTS.md with domain"; exit 1; }
 rm -rf "$d4"
 
+# domain: path-traversal name is rejected
+d5="$(mktemp -d)"
+if "$here/scaffold-repo.sh" "$d5" '../finance-trading' >/dev/null 2>&1; then echo "FAIL: traversal domain accepted"; exit 1; fi
+rm -rf "$d5"
+
 echo PASS
