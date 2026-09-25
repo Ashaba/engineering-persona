@@ -8,10 +8,10 @@ travel with me, and team standards committed per repo.
 
     git clone <this-repo> && cd ai-skills-and-agent && ./install.sh
 
-This links `persona/` into `~/.claude/CLAUDE.md` and symlinks the
-`pre-flight-review` skill into `~/.claude/skills/`. Edits and `git pull` take
-effect immediately. For Cursor and Windsurf, add `persona/beliefs.md` and
-`persona/voice.md` as user rules (manual, one time).
+This links `persona/` into `~/.claude/CLAUDE.md` and symlinks every skill under
+`skills/` into `~/.claude/skills/`. Edits and `git pull` take effect immediately.
+For Cursor and Windsurf, add `persona/beliefs.md` and `persona/voice.md` as user
+rules (manual, one time).
 
 If you move or re-clone the repo, re-run `./install.sh` to refresh the links.
 
@@ -26,8 +26,11 @@ If you move or re-clone the repo, re-run `./install.sh` to refresh the links.
 ## Daily use
 
 - Before pushing, run the `pre-flight-review` skill to catch drift.
+- After a review catches a missed pattern, run `learn-from-review` to turn it into a rule.
 - Add a team layer to a work repo: `./scaffold-repo.sh <path-to-repo> [domain]` (for example `finance-trading`).
 - Jot a new rule: `./capture.sh beliefs "the rule"` (targets: beliefs, voice, review).
+
+See [USAGE.md](USAGE.md) for how to run each command and what it requires.
 
 ## Domains
 
