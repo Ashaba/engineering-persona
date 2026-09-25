@@ -13,7 +13,7 @@ learnings as a pull request.
 - host: `github.com`
 - org: `eg-internal`
 - query: pull requests the current user authored
-This block is the only place the source is defined; a future config overrides it.
+This block is the single place the source is configured; a future config overrides it here. Other mentions of the org or host in this file are descriptive prose, not configuration.
 
 ## Accounts
 
