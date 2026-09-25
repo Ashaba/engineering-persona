@@ -60,3 +60,32 @@ Turn a PR review comment that caught a missed pattern into a persona rule.
   `gh` CLI for that host (the enterprise tool for eg-internal PRs, the github.com
   tool for personal repos). No access needed if you paste the comments.
 - Safe: never posts to the PR; never pushes.
+
+## run-sweep.sh
+
+Run the automated learning sweep once, now.
+
+- Run: `./run-sweep.sh`
+- Does: invokes Claude Code headless against the `learn-sweep` skill with a scoped
+  tool allowlist; logs to `~/.claude/engineering-persona/sweep.log`.
+- Requires: `gh` logged into the work account (reads eg-internal PRs) and the
+  `Ashaba` account (opens the gate PR); the ash ssh key for pushing.
+- Safe: only opens a PR; never merges, never commits to `main`, never posts to a
+  source PR. Every rule passes `scrub-check.sh` first.
+
+## schedule-sweep.sh
+
+Install or remove the daily launchd job that runs the sweep.
+
+- Run: `./schedule-sweep.sh` (install), `./schedule-sweep.sh --remove` (uninstall).
+  Set `SWEEP_HOUR` to change the hour (default 9).
+- Does: writes a launchd plist to `~/Library/LaunchAgents/` that runs
+  `run-sweep.sh` daily.
+- Requires: macOS. First-time setup: `gh auth login` for the Ashaba account.
+- Safe: idempotent; `--remove` fully uninstalls.
+
+## Prerequisites for automated learning
+
+- `gh auth login` once for the `Ashaba` account (gh keeps both accounts).
+- The sweep reads eg-internal reviews locally and only ever writes generalized,
+  scrubbed rules to the personal repo, behind a PR you merge.

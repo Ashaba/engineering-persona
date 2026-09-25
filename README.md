@@ -40,6 +40,15 @@ critically and applies domain rules. If unset, it infers the domain and confirms
 before applying. Seeded domains live in `domains/`; add one by adding a file.
 Updating a repo's inlined lens after the library changes is a manual edit; re-running `scaffold-repo.sh` skips an existing `AGENTS.md`.
 
+## Automated learning
+
+`learn-from-review` can run on a schedule. `./schedule-sweep.sh` installs a daily
+launchd job that sweeps new eg-internal PR reviews, generalizes them into rules
+(scrubbing anything internal-specific), and opens a gated PR on this repo for you
+to review and merge. It never merges, never commits to `main`, and never posts to
+the source PR. Remove it with `./schedule-sweep.sh --remove`. Requires a one-time
+`gh auth login` for the Ashaba account. See [USAGE.md](USAGE.md).
+
 ## Living documents
 
 Persona files grow over time. Quick notes land under each file's `## Inbox` via
