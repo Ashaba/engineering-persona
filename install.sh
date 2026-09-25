@@ -30,8 +30,11 @@ fi
 } >> "$CLAUDE_MD"
 echo "linked persona into $CLAUDE_MD"
 
-ln -sfn "$REPO_DIR/skills/pre-flight-review" "$SKILLS_DIR/pre-flight-review"
-echo "linked skill into $SKILLS_DIR/pre-flight-review"
+for skill_dir in "$REPO_DIR"/skills/*/; do
+  name="$(basename "$skill_dir")"
+  ln -sfn "${skill_dir%/}" "$SKILLS_DIR/$name"
+  echo "linked skill $name into $SKILLS_DIR/$name"
+done
 
 echo "note: for Cursor/Windsurf, add these as user rules (best-effort, manual):"
 echo "  $REPO_DIR/persona/beliefs.md"
