@@ -20,12 +20,21 @@ If you move or re-clone the repo, re-run `./install.sh` to refresh the links.
 - `persona/` personal, global. `beliefs.md` and `voice.md`.
 - `standards/` team, per repo. `engineering.md`, `review-checklist.md`, and
   `AGENTS.template.md`.
+- `domains/` industry lenses, per repo. Reweight review criticality and add domain
+  rules. Declared in a repo's `AGENTS.md` `## Domain` section.
 
 ## Daily use
 
 - Before pushing, run the `pre-flight-review` skill to catch drift.
-- Add a team layer to a work repo: `./scaffold-repo.sh <path-to-repo>`.
+- Add a team layer to a work repo: `./scaffold-repo.sh <path-to-repo> [domain]` (for example `finance-trading`).
 - Jot a new rule: `./capture.sh beliefs "the rule"` (targets: beliefs, voice, review).
+
+## Domains
+
+A repo declares its industry in its `AGENTS.md` `## Domain` section
+(`Domain: finance-trading`). When set, the persona judges matching concerns more
+critically and applies domain rules. If unset, it infers the domain and confirms
+before applying. Seeded domains live in `domains/`; add one by adding a file.
 
 ## Living documents
 

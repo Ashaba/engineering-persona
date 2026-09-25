@@ -16,15 +16,32 @@ would otherwise catch, and fix it first.
 
 Read those three files first. They are the source of truth and change over time.
 
+## Resolve the domain
+
+Determine the active domain before reviewing:
+
+1. If the repo's `AGENTS.md` has a `## Domain` section naming a domain
+   (`Domain: <name>`), use it.
+2. If it is `unset` or absent, infer the domain from repo signals (dependencies,
+   domain terms, org or repo name) and ask me to confirm before applying it. Never
+   apply an unconfirmed inference.
+3. If unconfirmed or non-interactive, use `_default` (no reweighting).
+
+Load the resolved lens from the repo's inlined `## Domain` section, or from
+`../../domains/<name>.md`. Apply it: raise the severity of findings that match its
+criticality ordering, and check its domain rules.
+
 ## Steps
 
 1. Determine the base branch (`main` or `master`) and get the diff: `git diff <base>...HEAD`.
-2. Run the built-in `/code-review` on the current diff for correctness and cleanup findings.
-3. Apply every gate from the review checklist to each changed file. For each hit,
-   report `file:line`, which gate fired, and a one-line fix.
-4. Confirm checks pass: build, tests, lint, and CI are green. Do not report
+2. Resolve the active domain (see "Resolve the domain") and load its lens.
+3. Run the built-in `/code-review` on the current diff for correctness and cleanup findings.
+4. Apply every gate from the review checklist to each changed file, using the domain
+   lens to weight severity and adding its domain rules. For each hit, report
+   `file:line`, which gate or rule fired, and a one-line fix.
+5. Confirm checks pass: build, tests, lint, and CI are green. Do not report
    ready-to-push until they are; if you cannot run them, say so explicitly.
-5. Summarize findings most-severe first, or state plainly that the diff is clean.
+6. Summarize findings most-severe first, or state plainly that the diff is clean.
 
 ## Writing any comments
 
