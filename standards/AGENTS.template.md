@@ -32,3 +32,10 @@ setup. The standards below are team-level. Tailor the repo-specific section.
   drift from its source?
 - Dated pattern where a current idiom exists?
 - An assumption taken from a doc or ticket without confirming against the code?
+
+## Domain
+
+Domain: unset
+
+No domain is declared. Infer the domain from repo signals and confirm with me
+before applying a lens. Until confirmed, use the default lens.
