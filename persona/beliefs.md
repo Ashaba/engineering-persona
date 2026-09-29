@@ -22,6 +22,10 @@ My durable engineering principles. Applied to any code or review, in any languag
   acting. Confirm a contract before integrating rather than assuming.
 - Verify before asserting. Do not push changes or call work done until all checks
   pass (build, tests, lint, CI). Rely on real output, not assumptions.
+- Design a function around its own contract, not its caller's. It does its job
+  and throws when it can't. The caller owns policy such as isolation, retries,
+  fallbacks, and aggregating results. If a comment justifies a callee's behavior
+  by describing its caller, the responsibility is in the wrong place.
 
 ## Inbox
 

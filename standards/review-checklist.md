@@ -14,6 +14,10 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
 - Is this the current idiom for the language and tech, or a dated pattern?
 - Was any assumption taken from a doc, README, or ticket without confirming it
   against the code or schema?
+- Does this function's error handling or return type exist to suit one
+  particular caller? If yes, move that policy to the caller.
+- In suspend code, can a catch-all or runCatching swallow CancellationException
+  and turn it into a log line, metric, or domain error?
 
 ## Inbox
 

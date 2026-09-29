@@ -15,3 +15,10 @@ Team and industry standards. Kept generic so they age well; tailor specifics per
   purpose.
 - Coverage must not regress.
 - Follow the repo PR template and the branch/commit conventions.
+- In Kotlin suspend code, cancellation is control flow, not an error. A
+  catch (e: Exception) or runCatching also catches CancellationException, so
+  rethrow it before any catch-all. Only the component that owns the concurrency
+  (the one that launched the siblings) catches broadly, to isolate one failure
+  from the rest, and it logs and counts what it catches. Narrow catches are fine
+  in sequential code, but check the list against what the client and its filters
+  really throw.
