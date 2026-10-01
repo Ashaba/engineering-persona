@@ -16,6 +16,9 @@ My durable engineering principles. Applied to any code or review, in any languag
 - Remove redundancy. No null checks for values that cannot be null.
 - Customer-first. No breaking changes. Design for extensibility and forward
   compatibility, since this software is consumed by other products.
+- Forward compatibility comes from additive change, not speculative structure.
+  Do not add a wrapper or placeholder for data no source can supply yet; add it
+  when it exists.
 - Prefer standard patterns. Keep code clean.
 - Code is the source of truth. Verify claims from Confluence, READMEs, Jira
   tickets, or another service's docs against the actual code or schema before
