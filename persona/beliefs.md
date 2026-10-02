@@ -29,6 +29,19 @@ My durable engineering principles. Applied to any code or review, in any languag
   and throws when it can't. The caller owns policy such as isolation, retries,
   fallbacks, and aggregating results. If a comment justifies a callee's behavior
   by describing its caller, the responsibility is in the wrong place.
+- Add new behavior by adding a new piece, not a new if statement. For example, to
+  support a new way to send alerts, write a new sender and add it to the list in
+  config. Do not add another branch inside the code that already sends alerts.
+- There should be one way to get each thing. If code picks between two versions
+  of a client, every caller asks the same picker, even callers that always want
+  the normal version. For example, do not hand out the normal client directly
+  while the test client goes through the picker.
+- Turn raw flags and strings into named types as soon as they arrive. For
+  example, turn a true or false "is test" flag into a type with the values Live
+  and Test. Then handle the values in a switch with no default branch, so adding
+  a new value will not compile until every switch handles it.
+- Name things for exactly what they are. A field called "variant" or "type"
+  makes the reader guess. "trafficVariant" or "paymentType" does not.
 
 ## Inbox
 

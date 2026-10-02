@@ -24,6 +24,13 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
 - Does this add a value to an output enum? Clients that reject unknown values
   break, so flag it to consumers.
 - Is any type or field here for data no source supplies yet? If yes, defer it.
+- Does this read a list page by page while the list can change? Items can then
+  show up twice or be missed. Remove duplicates, or use a cursor instead of page
+  numbers.
+- Does this code skip the shared way of getting something that the rest of the
+  code uses? For example, other callers get a client by asking a picker, but
+  this code builds or injects the client directly. If yes, make it use the
+  picker too.
 
 ## Inbox
 
