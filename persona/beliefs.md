@@ -16,12 +16,19 @@ My durable engineering principles. Applied to any code or review, in any languag
 - Remove redundancy. No null checks for values that cannot be null.
 - Customer-first. No breaking changes. Design for extensibility and forward
   compatibility, since this software is consumed by other products.
+- Forward compatibility comes from additive change, not speculative structure.
+  Do not add a wrapper or placeholder for data no source can supply yet; add it
+  when it exists.
 - Prefer standard patterns. Keep code clean.
 - Code is the source of truth. Verify claims from Confluence, READMEs, Jira
   tickets, or another service's docs against the actual code or schema before
   acting. Confirm a contract before integrating rather than assuming.
 - Verify before asserting. Do not push changes or call work done until all checks
   pass (build, tests, lint, CI). Rely on real output, not assumptions.
+- Design a function around its own contract, not its caller's. It does its job
+  and throws when it can't. The caller owns policy such as isolation, retries,
+  fallbacks, and aggregating results. If a comment justifies a callee's behavior
+  by describing its caller, the responsibility is in the wrong place.
 
 ## Inbox
 

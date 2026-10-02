@@ -14,6 +14,16 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
 - Is this the current idiom for the language and tech, or a dated pattern?
 - Was any assumption taken from a doc, README, or ticket without confirming it
   against the code or schema?
+- Does this function's error handling or return type exist to suit one
+  particular caller? If yes, move that policy to the caller.
+- In suspend code, can a catch-all or runCatching swallow CancellationException
+  and turn it into a log line, metric, or domain error?
+- Can the schema represent a combination that makes no sense, such as a value
+  without its qualifier or two fields stating the same fact differently? If yes,
+  pair them, or document the valid combinations and reject the rest.
+- Does this add a value to an output enum? Clients that reject unknown values
+  break, so flag it to consumers.
+- Is any type or field here for data no source supplies yet? If yes, defer it.
 
 ## Inbox
 
