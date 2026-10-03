@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Voice
 
 How I write and how I give feedback. Applied to PR descriptions, comments, and

@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Beliefs
 
 My durable engineering principles. Applied to any code or review, in any language.
