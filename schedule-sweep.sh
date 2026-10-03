@@ -15,7 +15,12 @@ if [ "${1:-}" = "--remove" ]; then
 fi
 
 HOUR="${SWEEP_HOUR:-9}"
-mkdir -p "$LA_DIR" "$HOME/.claude/engineering-persona"
+STATE_DIR="${PERSONA_STATE_DIR:-$HOME/.local/state/engineering-persona}"
+# Unset means run-sweep.sh picks whichever agent is installed at run time.
+AGENT_ENV=""
+[ -n "${SWEEP_AGENT:-}" ] && AGENT_ENV="<key>EnvironmentVariables</key>
+  <dict><key>SWEEP_AGENT</key><string>$SWEEP_AGENT</string></dict>"
+mkdir -p "$LA_DIR" "$STATE_DIR"
 cat > "$PLIST" <<PL
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -27,14 +32,15 @@ cat > "$PLIST" <<PL
     <string>$REPO_DIR/run-sweep.sh</string>
   </array>
   <key>WorkingDirectory</key><string>$REPO_DIR</string>
+  $AGENT_ENV
   <key>StartCalendarInterval</key>
   <dict><key>Hour</key><integer>$HOUR</integer><key>Minute</key><integer>0</integer></dict>
-  <key>StandardOutPath</key><string>$HOME/.claude/engineering-persona/sweep.log</string>
-  <key>StandardErrorPath</key><string>$HOME/.claude/engineering-persona/sweep.log</string>
+  <key>StandardOutPath</key><string>$STATE_DIR/sweep.log</string>
+  <key>StandardErrorPath</key><string>$STATE_DIR/sweep.log</string>
 </dict>
 </plist>
 PL
-echo "installed $PLIST (daily at ${HOUR}:00)"
+echo "installed $PLIST (daily at ${HOUR}:00, agent: ${SWEEP_AGENT:-auto})"
 
 if [ "$REAL" = 1 ]; then
   launchctl unload "$PLIST" 2>/dev/null || true

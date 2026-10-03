@@ -23,7 +23,7 @@ Never cross them: internal reads use work; the personal repo uses Ashaba.
 
 ## Watermark
 
-`~/.claude/engineering-persona/last-sweep` holds an ISO timestamp. If absent, use
+`~/.local/state/engineering-persona/last-sweep` holds an ISO timestamp. If absent, use
 7 days ago. Update it to now only after a successful run.
 
 ## Steps

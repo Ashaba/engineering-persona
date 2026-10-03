@@ -35,7 +35,9 @@ criticality ordering, and check its domain rules.
 
 1. Determine the base branch (`main` or `master`) and get the diff: `git diff <base>...HEAD`.
 2. Resolve the active domain (see "Resolve the domain") and load its lens.
-3. Run the built-in `/code-review` on the current diff for correctness and cleanup findings.
+3. Review the diff for correctness and cleanup findings. If the tool has a built-in
+   code review (for example `/code-review` in Claude Code), run it on the diff;
+   otherwise do this pass yourself.
 4. Apply every gate from the review checklist to each changed file, using the domain
    lens to weight severity and adding its domain rules. For each hit, report
    `file:line`, which gate or rule fired, and a one-line fix.
@@ -46,8 +48,9 @@ criticality ordering, and check its domain rules.
 ## Writing any comments
 
 Never post, submit, or publish comments or reviews on the user's behalf. Do not run
-`/code-review --comment`, do not submit a GitHub review, do not post to a PR. Produce
-findings as a local report or pending/draft comments only; the user posts them.
+a review command in posting mode (such as `/code-review --comment`), do not submit
+a GitHub review, do not post to a PR. Produce findings as a local report or
+pending/draft comments only; the user posts them.
 
 Follow `voice.md`: kind and Socratic, invite the author to decide, vary phrasing,
 no em-dashes, no emojis, concise and specific.

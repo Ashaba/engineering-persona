@@ -5,16 +5,23 @@ immediately, since `install.sh` uses symlinks and CLAUDE.md imports.
 
 ## install.sh
 
-Wire the personal layer and skills into this machine.
+Wire the personal layer and skills into this machine, for Claude Code and Devin.
 
 - Run: `./install.sh`
-- Adds: a managed block in `~/.claude/CLAUDE.md` importing `persona/beliefs.md` and
-  `persona/voice.md`, plus a symlink in `~/.claude/skills/` for every skill under
-  `skills/`.
-- Requires: Claude Code (uses `~/.claude`). Re-run after moving or re-cloning the
-  repo. For Cursor and Windsurf, add `persona/beliefs.md` and `persona/voice.md` as
-  user rules once, manually.
+- Adds for Claude Code: a managed block in `~/.claude/CLAUDE.md` importing
+  `persona/beliefs.md` and `persona/voice.md`, plus a symlink in `~/.claude/skills/`
+  for every skill under `skills/`.
+- Adds for Devin: symlinks `~/.devin/rules/engineering-persona-beliefs.md` and
+  `engineering-persona-voice.md` to the persona files, plus a symlink in
+  `~/.config/devin/skills/` for every skill. Verify with `devin rules list` (both
+  `always-on`) and `devin skills list`.
+- Requires: nothing beyond the tools you use; a tool that is not installed just
+  ignores its files. Re-run after moving or re-cloning the repo. For Cursor and
+  Windsurf, add `persona/beliefs.md` and `persona/voice.md` as user rules once,
+  manually.
 - Safe: preserves existing `~/.claude/CLAUDE.md` content; idempotent.
+- Keep the `trigger: always_on` front matter at the top of each persona file.
+  Without it Devin treats the rule as manual and does not load it.
 
 ## scaffold-repo.sh
 
@@ -37,23 +44,24 @@ Jot a quick note into a persona file's Inbox for later curation.
 - Adds: a timestamped note under the file's `## Inbox`.
 - Requires: nothing.
 
-## pre-flight-review (Claude Code skill)
+## pre-flight-review (skill)
 
 Review your working diff against the persona before you push.
 
-- Run: invoke `pre-flight-review` in Claude Code on a branch with changes.
+- Run: `/pre-flight-review` in Claude Code or Devin on a branch with changes.
 - Does: resolves the domain, applies the review gates and your beliefs, confirms
   checks pass, and reports drift with `file:line`.
-- Requires: Claude Code with the skill installed (`install.sh`); uses the built-in
-  `code-review`.
+- Requires: the skill installed (`install.sh`). Uses the tool's built-in code
+  review if it has one (Claude Code `/code-review`); otherwise the agent does that
+  pass itself.
 - Safe: reports only. Never posts or submits a review.
 
-## learn-from-review (Claude Code skill)
+## learn-from-review (skill)
 
 Turn a PR review comment that caught a missed pattern into a persona rule.
 
-- Run: invoke `learn-from-review` in Claude Code with a PR URL, or paste the review
-  comments.
+- Run: `/learn-from-review` in Claude Code or Devin with a PR URL, or paste the
+  review comments.
 - Does: extracts the missed pattern, classifies its layer, proposes the exact rule
   and a diff, and on your approval commits it to the persona repo.
 - Requires: to read a PR by URL, a connected GitHub MCP server or an authenticated
@@ -65,11 +73,19 @@ Turn a PR review comment that caught a missed pattern into a persona rule.
 
 Run the automated learning sweep once, now.
 
-- Run: `./run-sweep.sh`
-- Does: invokes Claude Code headless against the `learn-sweep` skill with a scoped
-  tool allowlist; logs to `~/.claude/engineering-persona/sweep.log`.
+- Run: `./run-sweep.sh`. It uses `devin` if installed, otherwise `claude`. Pin
+  one with `SWEEP_AGENT=devin` or `SWEEP_AGENT=claude`.
+- Does: invokes the agent headless against the `learn-sweep` skill with a scoped
+  tool allowlist; logs to `~/.local/state/engineering-persona/sweep.log`. The
+  watermark lives next to it in `last-sweep`.
+- Devin specifics: runs `devin -p` with a temporary `--config` holding only the
+  allowlist and denylist (in print mode any call that is not allowlisted is
+  rejected), and `--respect-workspace-trust false`, since print mode cannot show
+  the trust prompt. Merging, reviewing or commenting on PRs, `gh api`, force-pushes
+  and pushing to `main` are denied outright.
 - Requires: `gh` logged into the work account (reads eg-internal PRs) and the
-  `Ashaba` account (opens the gate PR); the ash ssh key for pushing.
+  `Ashaba` account (opens the gate PR); the ash ssh key for pushing; the chosen
+  agent logged in (`devin auth login` or `claude login`).
 - Safe: only opens a PR; never merges, never commits to `main`, never posts to a
   source PR. Every rule passes `scrub-check.sh` first.
 
@@ -78,7 +94,9 @@ Run the automated learning sweep once, now.
 Install or remove the daily launchd job that runs the sweep.
 
 - Run: `./schedule-sweep.sh` (install), `./schedule-sweep.sh --remove` (uninstall).
-  Set `SWEEP_HOUR` to change the hour (default 9).
+  Set `SWEEP_HOUR` to change the hour (default 9). Leave `SWEEP_AGENT` unset to
+  pick the installed agent at each run, or set it to pin one. Re-run to change
+  either.
 - Does: writes a launchd plist to `~/Library/LaunchAgents/` that runs
   `run-sweep.sh` daily.
 - Requires: macOS. First-time setup: `gh auth login` for the Ashaba account.
