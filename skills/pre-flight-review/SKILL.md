@@ -16,6 +16,12 @@ would otherwise catch, and fix it first.
 
 Read those three files first. They are the source of truth and change over time.
 
+Resolve those paths against the skill's real location, following the symlink if
+this skill was installed as one. A skill linked into `~/.config/devin/skills/`
+resolves `../../standards/` to `~/.config/devin/standards/`, and reviewing
+against gates that silently were not there is worse than not reviewing.
+If the files cannot be read, say so and stop rather than inventing gates.
+
 ## Resolve the domain
 
 Determine the active domain before reviewing:
@@ -44,6 +50,13 @@ criticality ordering, and check its domain rules.
 5. Confirm checks pass: build, tests, lint, and CI are green. Do not report
    ready-to-push until they are; if you cannot run them, say so explicitly.
 6. Summarize findings most-severe first, or state plainly that the diff is clean.
+7. Record the review so the push hook lets it through:
+   `mkdir -p "$(git rev-parse --git-dir)/pre-flight-review" && touch "$(git rev-parse --git-dir)/pre-flight-review/$(git rev-parse HEAD)"`
+
+Write the marker only once steps 1 to 6 are genuinely done and the checks in
+step 5 passed. It is keyed to the commit, so a later commit or an amend needs
+its own review, which is the point: the thing reviewed has to be the thing
+pushed. Writing it to skip the gate is lying to yourself in a file.
 
 ## Writing any comments
 

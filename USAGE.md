@@ -55,6 +55,12 @@ Review your working diff against the persona before you push.
   review if it has one (Claude Code `/code-review`); otherwise the agent does that
   pass itself.
 - Safe: reports only. Never posts or submits a review.
+- Enforced in Devin: `install.sh` registers a user-level `PreToolUse` hook that
+  blocks `git push` and `gh pr create` until the review has run. The skill
+  records it by touching `.git/pre-flight-review/<commit sha>`, so a later
+  commit or an amend needs reviewing again. Not yet wired for Claude Code.
+- To bypass for one push, create that file yourself. It is deliberately easy;
+  the hook exists to stop the review being forgotten, not to stop you.
 
 ## learn-from-review (skill)
 

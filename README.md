@@ -37,7 +37,9 @@ If you move or re-clone the repo, re-run `./install.sh` to refresh the links.
 Skills work the same in Claude Code and Devin: type `/<skill-name>`, or just
 describe the task and the agent picks the skill up.
 
-- Before pushing, run `/pre-flight-review` to catch drift.
+- `/pre-flight-review` catches drift before you push. In Devin it is enforced:
+  `install.sh` registers a hook that blocks `git push` and `gh pr create` until
+  the review has run on that exact commit.
 - After a review catches a missed pattern, run `/learn-from-review` to turn it into a rule.
 - Add a team layer to a work repo: `./scaffold-repo.sh <path-to-repo> [domain]` (for example `finance-trading`).
 - Jot a new rule: `./capture.sh beliefs "the rule"` (targets: beliefs, voice, review).
