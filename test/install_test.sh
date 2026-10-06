@@ -29,4 +29,39 @@ done
 
 grep -q 'keep me' "$CLAUDE_HOME/CLAUDE.md" || { echo "FAIL: user content lost on second run"; exit 1; }
 
+# The skills read ../../standards and ../../domains relative to where they are
+# installed, so those have to be linked alongside. Missing, pre-flight-review
+# reviews against no gates at all and reports the diff clean.
+for home in "$CLAUDE_HOME" "$DEVIN_HOME"; do
+  for shared in standards domains persona; do
+    [ "$(readlink "$home/$shared")" = "$here/$shared" ] \
+      || { echo "FAIL: $shared not linked into $home"; exit 1; }
+  done
+  [ -f "$home/skills/pre-flight-review/../../standards/review-checklist.md" ] \
+    || { echo "FAIL: gates unreachable from the installed skill in $home"; exit 1; }
+done
+
+# The push gate is registered globally, and reinstalling updates it in place.
+gate_count() {
+  python3 -c '
+import json, sys
+hooks = json.load(open(sys.argv[1])).get("hooks", {}).get("PreToolUse", [])
+print(sum(1 for m in hooks for h in m.get("hooks", [])
+          if h.get("command", "").endswith("require-pre-flight-review.sh")))
+' "$1"
+}
+[ "$(gate_count "$DEVIN_HOME/config.json")" -eq 1 ] \
+  || { echo "FAIL: push gate not registered exactly once"; exit 1; }
+
+# A pre-existing config must survive having the hook added to it.
+python3 -c '
+import json, sys
+c = json.load(open(sys.argv[1])); c["theme_mode"] = "dark"; json.dump(c, open(sys.argv[1], "w"))
+' "$DEVIN_HOME/config.json"
+"$here/install.sh" >/dev/null
+[ "$(gate_count "$DEVIN_HOME/config.json")" -eq 1 ] \
+  || { echo "FAIL: push gate duplicated on reinstall"; exit 1; }
+grep -q '"theme_mode"' "$DEVIN_HOME/config.json" \
+  || { echo "FAIL: existing user config clobbered"; exit 1; }
+
 echo PASS
