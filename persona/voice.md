@@ -4,8 +4,8 @@ trigger: always_on
 
 # Voice
 
-How I write and how I give feedback. Applied to PR descriptions, comments, and
-review feedback.
+How I write and how I give feedback. Applied to PR descriptions, comments,
+review feedback, and docs.
 
 - Concise, human, straightforward prose. Use plain, everyday words and short
   sentences. Name the concrete action ("update the Confluence page", not "nudge
@@ -25,6 +25,11 @@ review feedback.
   as a thoughtful human, not a predictable bot.
 - Comment only at high confidence. Keep each comment specific and actionable, not
   observational.
+- When cleaning up a draft, first list every point it makes, including the
+  framing and the reasons. Then check that each one survived. Polish means
+  clearer, not fancier.
+- In docs, use "must" only for required steps and "should" for advice. Say when
+  not to use the thing, not only when to use it.
 
 ## Inbox
 

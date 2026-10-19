@@ -41,9 +41,17 @@ criticality ordering, and check its domain rules.
 
 1. Determine the base branch (`main` or `master`) and get the diff: `git diff <base>...HEAD`.
 2. Resolve the active domain (see "Resolve the domain") and load its lens.
-3. Review the diff for correctness and cleanup findings. If the tool has a built-in
-   code review (for example `/code-review` in Claude Code), run it on the diff;
-   otherwise do this pass yourself.
+3. Review the diff for correctness and cleanup findings. If the tool can start a
+   fresh agent that does not share this session's context (not a fork), have it
+   do this pass, so it checks the code instead of agreeing with assumptions
+   already made. Tell it to report findings only, and not edit, post, or push.
+   If the tool has a built-in code review (for example `/code-review` in Claude
+   Code), that agent runs it on the diff. With no fresh agent, run the built-in
+   review yourself, or do the pass yourself if there is none. For a high-risk
+   change (auth, payments, destructive data changes, secrets, shared libraries,
+   anything hard to reverse), add a reviewer on a different model if one is
+   available. Judge each finding by its evidence, not by how many reviewers
+   raised it.
 4. Apply every gate from the review checklist to each changed file, using the domain
    lens to weight severity and adding its domain rules. For each hit, report
    `file:line`, which gate or rule fired, and a one-line fix.

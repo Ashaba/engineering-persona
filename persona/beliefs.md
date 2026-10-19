@@ -46,6 +46,13 @@ My durable engineering principles. Applied to any code or review, in any languag
   a new value will not compile until every switch handles it.
 - Name things for exactly what they are. A field called "variant" or "type"
   makes the reader guess. "trafficVariant" or "paymentType" does not.
+- An approval step is not a safety boundary. Do not start something that can
+  reach production and count on a manual approval to stop it. If the safe path
+  is broken, fix it or ask a person. Never fall back to the path that can do
+  harm.
+- "Could not check" is not "found nothing". When a lookup fails, record the
+  result as unknown and say the run is incomplete. Never store a failure as a
+  negative answer, and never fill the gap with a guess.
 
 ## Inbox
 
