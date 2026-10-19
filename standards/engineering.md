@@ -10,7 +10,8 @@ Team and industry standards. Kept generic so they age well; tailor specifics per
 - Prefer domain/application error codes over raw HTTP. Never leak internal or
   downstream names to clients. Preserve upstream status codes via shared mappers.
 - Keep generated types (for example GraphQL) committed and in sync with the schema.
-- Match the established sibling implementation for tagging, reporting, and auth.
+- Match the established sibling implementation for tagging, reporting, and auth,
+  where it meets these standards.
 - Do not touch shared handlers or config unrelated to the change. Keep PRs single
   purpose.
 - Coverage must not regress.
@@ -43,3 +44,26 @@ Team and industry standards. Kept generic so they age well; tailor specifics per
   retry, and which input fields are used.
 - In tests, build test data with helper functions where every field has a
   default. Each test then sets only the fields it cares about.
+- A deploy is done only when the evidence points at the version you shipped,
+  by commit or start time. A successful trigger proves nothing, and healthy
+  signals can come from the old version still running.
+- Bulk writes that replace existing data, such as backfills and migrations,
+  show a dry-run diff first, take a backup, and read the result back after.
+  They are safe to re-run. If the diff deletes more than you expected, stop
+  and ask.
+- A hook or helper script that fails on its own error reports the error and
+  lets the main flow go on. It blocks only when blocking is its job.
+- In hooks and helper scripts, every outside call has a timeout. Run commands
+  with an argument list, not a shell string, and pass untrusted text through
+  environment variables.
+- In a GraphQL schema, lists default to a non-null list of non-null items, and
+  return an empty list rather than null when there is nothing to return. A list
+  filled by a call that can fail is nullable, so a failure reads as null, not
+  as empty. A mutation takes one input object and returns its own result type,
+  so both can gain fields later without a breaking change. Value types such as
+  money, address, or phone number have one definition across a shared graph.
+- Rate a schema problem by whether it has shipped. In an unreleased element,
+  fix it before merge, since that is the cheap moment. A released element is
+  fixed additively: add the corrected element and deprecate the old one.
+- In CI, pin third-party actions to a commit, give each job only the
+  permissions it needs, and cancel PR runs that a newer push replaced.

@@ -6,7 +6,10 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
 - Does the framework, platform, or language already do this? If yes, use it.
 - Does this duplicate existing code or a type? If yes, reuse the original.
 - Can this field ever actually be null? If not, make it required, and validate at
-  the boundary rather than defensively downstream.
+  the boundary rather than defensively downstream. If it can, because the data
+  is filled in later, is missing from old records, or the code that fills it
+  can return nothing, make it optional. In a schema that returns partial
+  results, that includes a field filled by a remote call that can fail.
 - Is any of this unrelated to the task? If yes, remove or defer it.
 - Does this swallow an error, leak an internal detail, or drop an upstream status?
 - Does this change behavior for other callers, or let a contract or generated
@@ -31,6 +34,22 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
   code uses? For example, other callers get a client by asking a picker, but
   this code builds or injects the client directly. If yes, make it use the
   picker too.
+- Does this add a new null or failure mode? Follow it to its last consumer.
+  What happens there?
+- Which way did a nullability change go? An input that becomes required breaks
+  callers. An output that becomes nullable breaks clients. A new field on an
+  existing input must be optional or have a default, even where fields are
+  required by default.
+- Does this follow an existing pattern that breaks a standard? Matching old
+  code is still a violation. Fix the new code and record the old cases for
+  follow-up.
+- Do operations that work as a pair, such as preview and execute, agree on
+  input fields, return shapes, and nullability?
+- Does a name repeat what its parent already says, such as a name field on a
+  Property type called propertyName? Keep only the part that tells it apart
+  from its siblings, unless what is left is a vague word like type or id.
+- Is invalid output patched after the fact? Fix it where it is produced, and
+  have the producer run the same validator so it cannot write a bad result.
 
 ## Inbox
 
