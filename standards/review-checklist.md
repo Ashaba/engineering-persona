@@ -5,6 +5,8 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
 - What is the second consumer of this abstraction? If none, inline it.
 - Does the framework, platform, or language already do this? If yes, use it.
 - Does this duplicate existing code or a type? If yes, reuse the original.
+- Does this add a user-facing message for a condition the code already reports?
+  If yes, reuse that wording so one condition always reads the same way.
 - Can this field ever actually be null? If not, make it required, and validate at
   the boundary rather than defensively downstream. If it can, because the data
   is filled in later, is missing from old records, or the code that fills it

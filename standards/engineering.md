@@ -67,3 +67,6 @@ Team and industry standards. Kept generic so they age well; tailor specifics per
   fixed additively: add the corrected element and deprecate the old one.
 - In CI, pin third-party actions to a commit, give each job only the
   permissions it needs, and cancel PR runs that a newer push replaced.
+- A test that claims to cover what a client receives asserts the whole
+  response: codes, paths and extra fields, not only the message. Otherwise a
+  dropped field keeps the test green.
