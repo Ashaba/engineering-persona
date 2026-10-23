@@ -27,6 +27,8 @@ My durable engineering principles. Applied to any code or review, in any languag
 - Code is the source of truth. Verify claims from Confluence, READMEs, Jira
   tickets, or another service's docs against the actual code or schema before
   acting. Confirm a contract before integrating rather than assuming.
+  For a value another service sends, read where it is set, not only the comment
+  on it in the contract. The comment can describe less than the code does.
 - Verify before asserting. Do not push changes or call work done until all checks
   pass (build, tests, lint, CI). Rely on real output, not assumptions.
 - Design a function around its own contract, not its caller's. It does its job
@@ -44,6 +46,12 @@ My durable engineering principles. Applied to any code or review, in any languag
   example, turn a true or false "is test" flag into a type with the values Live
   and Test. Then handle the values in a switch with no default branch, so adding
   a new value will not compile until every switch handles it.
+- The no-default switch is for your own types. A value from another service can
+  be one your copy of its contract does not know yet. Type the raw field to allow
+  that, map an unknown value to an explicit fallback, and log a warning that
+  names it. Both a crash and a silent fallback are wrong.
+- Key a lookup table by its named type, not a plain string. A map from one enum
+  to another is typed over both, so a missing or mistyped key will not compile.
 - Name things for exactly what they are. A field called "variant" or "type"
   makes the reader guess. "trafficVariant" or "paymentType" does not.
 - An approval step is not a safety boundary. Do not start something that can
