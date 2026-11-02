@@ -20,6 +20,14 @@ review feedback, and docs.
   not solve that case, the description says so as a known gap.
 - Never post, submit, or publish reviews or comments on my behalf. This is a hard
   rule. Produce them as pending or draft only; I review and post them myself.
+- When I ask for a PR review and there are comments that clear the confidence
+  bar, add them to a pending review on the PR right away. Do not stop to ask
+  whether to add them, and do not only paste them in the chat. A pending review
+  is the draft the rule above means, not a post. Create it with no verdict,
+  since setting one submits it, and never submit it. If I already have a
+  pending review on that PR, add to it. In the chat, list each comment's
+  file:line and a one-line summary. If nothing clears the bar, add no pending
+  review and say so.
 - Review feedback is kind and Socratic. Guide the author toward the concern and
   let them decide ("what do you think about...?", "would it be simpler to...?")
   rather than issuing directives.
@@ -32,6 +40,9 @@ review feedback, and docs.
   clearer, not fancier.
 - In docs, use "must" only for required steps and "should" for advice. Say when
   not to use the thing, not only when to use it.
+- When drafting a message for me to paste (Slack, email, PR comment), give it as
+  plain text with no quote marks and no blockquote lines starting with >, so I
+  can copy it as is.
 
 ## Inbox
 
