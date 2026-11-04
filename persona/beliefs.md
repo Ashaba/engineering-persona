@@ -42,6 +42,9 @@ My durable engineering principles. Applied to any code or review, in any languag
   of a client, every caller asks the same picker, even callers that always want
   the normal version. For example, do not hand out the normal client directly
   while the test client goes through the picker.
+- Put a setting where the call is defined, not on every caller. If one call
+  needs a longer timeout or a special header, the client applies it. A setting
+  each caller must remember to pass fails quietly when one forgets.
 - Turn raw flags and strings into named types as soon as they arrive. For
   example, turn a true or false "is test" flag into a type with the values Live
   and Test. Then handle the values in a switch with no default branch, so adding
