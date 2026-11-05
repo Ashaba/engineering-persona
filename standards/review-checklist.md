@@ -52,6 +52,15 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
   from its siblings, unless what is left is a vague word like type or id.
 - Is invalid output patched after the fact? Fix it where it is produced, and
   have the producer run the same validator so it cannot write a bad result.
+- Is every config key here read by the library version in use? A renamed
+  prefix turns a key into a no-op with no error. Find where the library reads it.
+- Does the coverage gate measure the new code? A module with no tests, or a
+  check that skips when its data is missing, passes without measuring anything.
+- Does a "no behavior change" claim hold at startup? Registering a client or
+  bean can run code on every boot, such as fetching tokens, even when nothing
+  calls it.
+- Does a new timeout fit inside the caller's own timeout? A long timeout also
+  holds a request thread that long, so check it against the thread pool.
 
 ## Inbox
 

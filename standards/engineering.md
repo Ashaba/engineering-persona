@@ -70,3 +70,23 @@ Team and industry standards. Kept generic so they age well; tailor specifics per
 - A test that claims to cover what a client receives asserts the whole
   response: codes, paths and extra fields, not only the message. Otherwise a
   dropped field keeps the test green.
+- Metric tags take a small, fixed set of values, such as a status code or an
+  exception class. Never put an exception message, URL or response body in a
+  tag. Those values have no limit, so they blow up tag cardinality and can carry
+  data that should not leave the service. Keep upstream bodies out of exception
+  messages too, since messages end up in logs and tags.
+- A filter that keeps data out of logs, such as a body mask, fails closed. Mask
+  by default and let through only what is known to be safe. If it can only
+  match what to hide, test it against every URL that will reach it, including
+  ones with a query string.
+- A shared instance holds no per-request state. Loggers, clients and
+  interceptors are reused across concurrent calls, so a field one call sets can
+  be read by another. Use the request or response passed into the method.
+- Test framework config through the framework. Timeouts, error decoding, 404
+  handling and encoding only matter if the framework applies them. Build a real
+  client with a fake transport, then assert what it does and what it sends.
+  Use the same configured mapper and encoder as production, not a plain default.
+- Environment config holds only what differs between environments. Keys that
+  are the same everywhere go in the base file once. A fixed behavior, or a
+  setting for one call, goes in code next to that call. Give each value one
+  home: a code default or config, not both.
