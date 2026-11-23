@@ -61,6 +61,12 @@ Each gate is a challenge to raise against a diff. Findings cite file:line.
   calls it.
 - Does a new timeout fit inside the caller's own timeout? A long timeout also
   holds a request thread that long, so check it against the thread pool.
+- Does an alert or metric count errors by category? List what throws each
+  category and whether the caller or we caused it. Count only the errors we
+  can fix, whatever the category is named.
+- Is the change's main claim tested end to end? Tests of each piece can pass
+  while the pieces fail together. At least one test runs the real path through
+  the framework and asserts the claim as a whole.
 
 ## Inbox
 

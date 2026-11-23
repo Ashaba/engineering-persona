@@ -43,6 +43,9 @@ review feedback, and docs.
 - When drafting a message for me to paste (Slack, email, PR comment), give it as
   plain text with no quote marks and no blockquote lines starting with >, so I
   can copy it as is.
+- Check every number and promise in a description against real data, such as
+  traffic volume against an alert threshold. If it holds only in some cases,
+  say which.
 
 ## Inbox
 

@@ -27,8 +27,11 @@ My durable engineering principles. Applied to any code or review, in any languag
 - Code is the source of truth. Verify claims from Confluence, READMEs, Jira
   tickets, or another service's docs against the actual code or schema before
   acting. Confirm a contract before integrating rather than assuming.
-  For a value another service sends, read where it is set, not only the comment
-  on it in the contract. The comment can describe less than the code does.
+  For a value your code did not produce, read where it is set, not only its
+  name, type or comment. That includes a field another service sends, a value a
+  framework fills in during a hook, and a stored field that other code also
+  writes. Check what it holds in every case, including a crash and a request
+  that fails before your code runs.
 - Verify before asserting. Do not push changes or call work done until all checks
   pass (build, tests, lint, CI). Rely on real output, not assumptions.
 - Design a function around its own contract, not its caller's. It does its job
